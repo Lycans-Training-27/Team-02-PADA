@@ -1,0 +1,157 @@
+% ============================================================
+% LYCANS TEAM — TRAINEE ASSIGNMENT TEMPLATE
+% ============================================================
+%
+% Compile with:
+%   lualatex assignment.tex
+%
+% IMPORTANT:
+%   This file is intentionally kept simple.
+%   Learn the commands and use this template for your work.
+%
+% ============================================================
+
+% !TeX program = lualatex
+
+\documentclass[11pt,a4paper]{article}
+
+% ------------------------------------------------------------
+% BASIC PACKAGES
+% ------------------------------------------------------------
+
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+\usepackage[a4paper,margin=1in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% ------------------------------------------------------------
+% COLORS
+% ------------------------------------------------------------
+
+\definecolor{LycansBlue}{HTML}{002060}
+\definecolor{LycansLightBlue}{HTML}{203764}
+\definecolor{LycansRed}{HTML}{A20000}
+\definecolor{LinkBlue}{HTML}{0563C1}
+
+% ------------------------------------------------------------
+% HYPERLINKS
+% ------------------------------------------------------------
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=LycansBlue,
+    urlcolor=LinkBlue,
+    citecolor=LycansBlue
+}
+
+% ------------------------------------------------------------
+% PAGE STYLE
+% ------------------------------------------------------------
+
+\pagestyle{fancy}
+\fancyhf{}
+
+% Header
+\fancyhead[L]{
+    \raisebox{-0.15cm}{%
+        \includegraphics[height=0.8cm]{images/lycans-logo.png}%
+    }
+}
+
+\fancyhead[R]{
+    \textcolor{LycansBlue}{\textbf{Trainee Assignment}}
+}
+
+% Footer
+\fancyfoot[C]{
+    Page \thepage\ of \pageref{LastPage}
+}
+
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ------------------------------------------------------------
+% SECTION STYLE
+% ------------------------------------------------------------
+
+\usepackage{titlesec}
+
+\titleformat{\section}
+    {\Large\bfseries\color{LycansBlue}}
+    {\thesection}
+    {0.6em}
+    {}
+
+\titleformat{\subsection}
+    {\large\bfseries\color{LycansLightBlue}}
+    {\thesubsection}
+    {0.5em}
+    {}
+
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{LycansBlue}}
+    {\thesubsubsection}
+    {0.5em}
+    {}
+
+% ------------------------------------------------------------
+% CODE STYLE
+% ------------------------------------------------------------
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    columns=fullflexible
+}
+
+% ============================================================
+% DOCUMENT
+% ============================================================
+
+\begin{document}
+
+% ------------------------------------------------------------
+% TITLE
+% ------------------------------------------------------------
+
+\begin{center}
+
+    {\Large\bfseries\color{LycansBlue}
+    LYCANS AERODESIGN TEAM}
+
+    \vspace{0.5cm}
+
+    {\LARGE\bfseries
+    PADA Report}
+
+    \vspace{0.5cm}
+
+    \begin{tabular}{rl}
+        \textbf{Group Number:} & 02 \\
+    \end{tabular}
+
+\end{center}
+
+\vspace{0.5cm}
+
+\hrule
+
+\vspace{0.5cm}
+
+
+\end{document}
