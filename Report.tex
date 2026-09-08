@@ -160,12 +160,70 @@
 
 \section{Conceptual Design}
 \subsection{Mission Requirements and Design Constraints}
+Mission Objective is to design a small unmanned aerial vehicle (UAV) resembling the Powered Autonomous Delivery Aircraft, aka PADA. The aim of the project is to simulate both aircraft design
+and manufacturing processes, which will follow when the season begins. Designing the aircraft
+means working on the wing, tail, fuselage, and electrical system.
+
+The mission has very clear constraints:
+\begin{table}[H]
+    \centering
+    \caption{PADA UAV Mission and Design Constraints}
+    \label{tab:mission_constraints}
+
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Parameter} & \textbf{Constraint} \\
+        \midrule
+        Maximum Wingspan & 25 in \\ %[cite: 1]
+        Maximum Gross Weight & 19.5 oz (including electrical system) \\ %[cite: 1]
+        Payload & Empty Pepsi can (external mechanism) \\ %[cite: 1]
+        Wing Airfoil Options & E423, S1223, GOE 165, or NACA 2412 \\ %[cite: 1]
+        Battery Energy Limit & $\le \SI{100}{\watt\hour}$ (LiHV prohibited) \\ %[cite: 1]
+        Takeoff Ground Distance & \SI{8}{\meter} to \SI{12}{\meter} \\ %[cite: 1]
+        Takeoff Angle of Attack & $< 35^\circ$ to $40^\circ$ \\ %[cite: 1]
+        Minimum Cruise Speed & \SI{25}{\meter\per\second} \\ %[cite: 1]
+        Minimum Turn Bank Angle & $> 60^\circ$ \\ %[cite: 1]
+        Flight Altitude Range & \SI{50}{\meter} to \SI{100}{\meter} \\ %[cite: 1]
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 \subsection{Selected Aircraft Configuration}
-\subsection{Major Design Tradeoffs and Justification}
+\subsubsection{Airfoil Selection}
+The chosen airfoil for the PADA's wing is the S1223 Airfoil, this is based on a trade study as seen below:
+\begin{figure}[H]
+    \centering
+
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Airfoil_Analysis.png}
+        \caption{Airfoil Analysis and Comparison}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Foil_Study.png}
+        \caption{Airfoil trade study}
+    \end{minipage}
+
+\end{figure}
+
+\subsubsection{Wing and Tail Configurations}
+\subsubsection{Fuselage}
+
 
 \section{Preliminary Design}
 \subsection{Propulsion Constraint Analysis}
+The Constraint Analysis was made based on the Constraints of the mission during Take-off, Cruising, Landing, and Turning, the following is a graph that demonstrates the Analysis:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/Constraint_Analysis.png}
+    \caption{Propulsion constraint analysis diagram}
+    \label{fig:constraint_analysis}
+\end{figure}
+The optimum point is highlighted where the Wing Loading is 43.1 and the Thrust to weight ratio is 0.31.
 
+This analysis assumes an AR of 3.33 and a Climb rate of 3m/s which will be taken into consideration throughout the project, also R was given a value of 30m to have a smaller turn-radius.
 \subsection{Wing and Tail Sizing}
 
 \subsection{Aerodynamic Performance and Stability Analysis}
@@ -225,4 +283,3 @@
 
 
 \end{document}
-
