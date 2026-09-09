@@ -242,12 +242,44 @@ This analysis assumes an AR of 3.33 and a Climb rate of 3m/s which will be taken
 % • Final mass and center of gravity.
 % • Final aerodynamic and stability results.
 \subsection{Electrical and Avionics Design}
-% Include:
-% • Electrical system block diagram and schematic.
-% • Power budget and component selection.
-% • Battery, ESC, motor, propeller, flight controller, GPS, telemetry, servos, and regulators.
-% • Wiring, connectors, protection, and electrical safety considerations.
-% • Component placement and integration within the aircraft
+
+The electrical and avionics system for the PADA aircraft is engineered to meet strict power, weight, and operational constraints while ensuring reliable communication with the ROS 2 autonomy stack via MAVROS. 
+
+\subsubsection{Component Selection and Inventory}
+
+Table~\ref{tab:electrical_inventory} details the selected hardware components, including their electrical ratings, approximate costs, mass allocations, and design justifications.
+
+\begin{table}[H]
+    \centering
+    \caption{PADA Electrical Components Inventory}
+    \label{tab:electrical_inventory}
+    \small
+    \begin{tabular}{l l l l l}
+        \toprule
+        \textbf{Component} & \textbf{Power / Amp Rating} & \textbf{Price (\$)} & \textbf{Weight (g)} & \textbf{Selected Model / Notes} \\
+        \midrule
+        Battery & 3S 11.1V 1300mAh 45C & \$15.00 & 115 g & Tattu 3S LiPo (High discharge rate) \\
+        ESC & 30A Continuous (40A Burst) & \$12.00 & 28 g & BLHeli\_S 30A ESC with 5V/2A BEC \\
+        Motor & 2205 2300KV (Max $\approx$ 25A) & \$14.00 & 30 g & EMAX RS2205 Brushless Outrunner \\
+        Propeller & N/A & \$3.00 & 8 g & Gemfan 6040 2-Blade Propeller \\
+        Flight Controller & 5V DC / 2W & \$45.00 & 35 g & Pixhawk 2.4.8 (ArduPilot Compatible) \\
+        Receiver & 4.8V--8.4V DC & \$15.00 & 7 g & Flysky FS-iA6B 6-Channel Receiver \\
+        GPS Module & 5V DC / 100mA & \$18.00 & 26 g & NEO-M8N GPS with Compass \\
+        Telemetry Radio & 5V DC / 500mW (915MHz) & \$22.00 & 14 g & Holybro Transceiver Set (100mW) \\
+        Servos (x4) & 4.8V--6.0V DC ($1.8\,\text{kg}\cdot\text{cm}$) & \$16.00 & 54 g ($4 \times 13.5\text{g}$) & TowerPro MG90S Metal Gear Micro \\
+        \midrule
+        \textbf{Total} & --- & \textbf{\$150.00} & \textbf{317 g} & --- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsubsection{Electrical System Architecture and Safety}
+
+\begin{itemize}
+    \item \textbf{Power Distribution:} A 3S LiPo battery supplies main battery voltage directly to the 30A ESC. The integrated Battery Eliminator Circuit (BEC) regulates power down to $5\,\text{V DC}$ to safely drive the flight controller, RC receiver, and onboard servos.
+    \item \textbf{Autopilot \& ROS 2 Integration:} The Pixhawk 2.4.8 runs ArduPilot firmware and communicates with the companion computer via a TELEM serial port. MAVROS bridges TELEM commands directly to ROS 2 nodes for autonomous mission execution and mode switching.
+    \item \textbf{Electrical Safety:} A high-current XT60 main connector serves as the master power switch. All signal lines utilize shielded twisted-pair wiring to prevent electromagnetic interference (EMI) from high-current motor leads.
+\end{itemize}
 \subsection{Autonomous System and Software}
 % Include:
 % • Overall system architecture and data flow.
