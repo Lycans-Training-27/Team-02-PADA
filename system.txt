@@ -1,0 +1,178 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{siunitx}
+\usepackage{caption}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\bfseries LYCANS AERODESIGN TEAM}\\[0.5em]
+    {\Large\bfseries PADA Comprehensive Engineering Report}\\[0.5em]
+    \textbf{Group Number:} 02 \\
+    \textbf{Project Phase:} Final Design, Manufacturing, and Autonomous Integration \\
+    \textbf{Date:} September 2026
+\end{center}
+
+\vspace{0.5cm}
+\hrule
+\vspace{0.5cm}
+
+\tableofcontents
+\newpage
+
+\section{Conceptual Design}
+\subsection{Mission Requirements and Design Constraints}
+The primary mission objective is to design, model, fabricate, and test a small Unmanned Aerial Vehicle (UAV) designated as the Powered Autonomous Delivery Aircraft (PADA). The engineering lifecycle encompasses structural layout definition, aerodynamic trade studies, propulsion sizing, electrical power budgeting, and advanced autonomous software integration. 
+
+The project operates under strict aerospace and competition constraints, which dictate every parameter from geometric boundaries to power consumption limits. These constraints are summarized in Table \ref{tab:mission_constraints}:
+
+\begin{table}[H]
+    \centering
+    \caption{Comprehensive PADA UAV Mission and Design Constraints}
+    \label{tab:mission_constraints}
+    \begin{tabular}{ll}
+        \toprule
+        \textbf{Parameter} & \textbf{Constraint / Target Specification} \\
+        \midrule
+        Maximum Wingspan & 25 in \\
+        Maximum Gross Weight & 19.5 oz (inclusive of avionics and power system) \\
+        Payload Delivery & Empty Pepsi can (via external release mechanism) \\
+        Wing Airfoil Options & E423, S1223, GOE 165, or NACA 2412 \\
+        Battery Energy Limit & $\le \SI{100}{\watt\hour}$ (LiHV chemistries strictly prohibited) \\
+        Takeoff Ground Distance & \SI{8}{\meter} to \SI{12}{\meter} \\
+        Takeoff Angle of Attack & $< 35^\circ$ to $40^\circ$ \\
+        Minimum Cruise Speed & \SI{25}{\meter\per\second} \\
+        Minimum Turn Bank Angle & $> 60^\circ$ \\
+        Flight Altitude Range & \SI{50}{\meter} to \SI{100}{\meter} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Operational Concept and Mission Profile}
+The PADA system is engineered to perform a structured autonomous mission profile comprising ground takeoff, steady-state climb, high-speed cruise, target localization, precision payload deployment, and automated return-to-launch or landing sequences. The integration of computer vision with flight control pipelines ensures adaptability against unexpected airborne hazards and dynamic ground instructions.
+
+\section{Preliminary Design}
+\subsection{Propulsion and Constraint Analysis}
+The constraint analysis forms the mathematical foundation of the aircraft sizing process, balancing aerodynamic performance against propulsion limits across four critical flight phases: takeoff, cruising, turning, and climbing. 
+
+The sizing envelope is governed by the fundamental aircraft equations of motion:
+\begin{align}
+    \left(\frac{T}{W}\right) &= \frac{1}{q_s C_{D,0} + k q_s \left(\frac{W}{S}\right)^2} \\
+    q_s &= \frac{1}{2} \rho V^2
+\end{align}
+where $T/W$ represents the thrust-to-weight ratio, $W/S$ is the wing loading, $q_s$ is the dynamic pressure, $\rho$ is air density, $V$ is velocity, $C_{D,0}$ is zero-lift drag coefficient, and $k$ is the induced drag factor.
+
+\subsection{Wing and Tail Sizing}
+Following trade studies comparing airfoils such as E423, S1223, GOE 165, and NACA 2412, the high-lift S1223 airfoil was selected due to its superior camber characteristics and high lift-to-drag ratio at low Reynolds numbers. The wing geometry was structured with an aspect ratio ($AR$) of 3.33 to satisfy the 25-inch maximum wingspan constraint while maximizing lifting surface area.
+
+\subsection{Aerodynamic Performance and Stability Analysis}
+Static longitudinal stability requires the center of gravity ($CG$) to reside forward of the neutral point ($NP$). The static margin was maintained within the optimal range of $10\%-15\%$ of the Mean Aerodynamic Chord (MAC). Tail sizing parameters (horizontal and vertical stabilizer volumes) were calculated to ensure dampening of short-period and phugoid oscillations.
+
+\section{Detailed Design}
+\subsection{Aircraft Design and Structural Layout}
+The final mechanical layout integrates the fuselage, wing spars, motor mount, and internal avionics bay into a cohesive assembly modeled in SolidWorks. Finite Element Analysis (FEA) was performed on the main wing spar to withstand structural loads exceeding a $3.5\text{G}$ loading factor during high-bank turns ($>60^\circ$).
+
+\subsection{Electrical and Avionics Design}
+The electrical subsystem powers the propulsion motor, flight controller, digital servos, onboard companion computer, and sensor suites. A comprehensive power budget guarantees that peak current draws do not exceed Electronic Speed Controller (ESC) thresholds or battery discharge limits.
+\begin{itemize}
+    \item \textbf{Flight Controller \& Sensors:} Pixhawk/ArduPilot-compatible micro-controller integrated with internal IMUs, external GPS modules, and telemetry radios.
+    \item \textbf{Actuation:} High-torque micro servos operating control surfaces (ailerons, elevator, rudder) and the payload release servo mechanism.
+    \item \textbf{Power Distribution:} LiPo battery connected via a power module providing regulated $5\text{V}$ logic rails and real-time current/voltage sensing.
+\end{itemize}
+
+\subsection{Autonomous System and Software}
+Modern autonomous aerial vehicles require robust, fault-tolerant, and real-time software architectures bridging high-level computer vision perception with low-level flight control loops.
+
+\subsubsection{5.2.1 Physical System Setup \& SITL Architecture}
+The autonomous framework relies on a hybrid physical-simulation architecture that decouples environmental sensing from flight execution:
+\begin{itemize}
+    \item \textbf{Physical Optical Sensing Layer:} A smartphone camera is securely mounted on a stationary PADA airframe mock-up, providing live real-world visual data streams without risking physical flight crashes.
+    \item \textbf{Companion Workstation Processing:} An external workstation processes the incoming video stream in real-time, executing computer vision algorithms, color segmentation, and safety-critical state evaluation logic.
+    \item \textbf{ROS 2 / MAVROS Communication Middleware:} Translates high-level decisions into standard ROS 2 messages which interface directly with MAVROS, converting semantic commands into standardized MAVLink packets.
+    \item \textbf{Flight Execution via ArduPilot SITL:} MAVLink packets drive a simulated fixed-wing aircraft running inside ArduPilot SITL, with telemetry monitored live via QGroundControl.
+\end{itemize}
+
+\subsubsection{5.2.2 Unified Mission Scenario \& Perception Requirements}
+The system utilizes a unified perception pipeline handling two operational scenarios during a single mission profile:
+\begin{enumerate}
+    \item \textbf{Environmental Hazard / Obstacle Avoidance:} While executing an automated waypoint mission (\texttt{AUTO}), the camera detects an obstacle blocking the path, triggers a temporary switch to \texttt{GUIDED} mode to bypass the hazard, and returns to the waypoint sequence.
+    \item \textbf{Visual Mission Instruction (Flight-Mode Command):} The camera detects visual targets encoding flight commands, decoding the signal to trigger explicit mode changes (such as \texttt{RTL} or \texttt{GUIDED}) via MAVROS service calls (\texttt{/mavros/set\_mode}).
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{vision&mapping.png}
+    \caption{Live execution of the dual-scenario mission showing ROS 2 vision processing node, QGroundControl telemetry, and real-time flight mode transitions.}
+    \label{fig:vision_mapping}
+\end{figure}
+
+\subsubsection{5.2.3 System Architecture \& ROS 2 Interface Design}
+The software architecture follows a modular two-node design pattern:
+\begin{center}
+    \textbf{[Visual Perception] $\rightarrow$ [State Interpretation] $\rightarrow$ [Autonomy Engine] $\rightarrow$ [ROS 2 / MAVROS] $\rightarrow$ [SITL / QGC]}
+\end{center}
+\begin{itemize}
+    \item \textbf{ROS 2 Nodes:} \texttt{vision\_node} (Publisher capturing frames at $\sim$30 FPS over \texttt{/camera/image\_raw}) and \texttt{decision\_node} (Subscriber processing HSV color masking and controlling flight modes).
+    \item \textbf{Communication Protocols:} \texttt{sensor\_msgs/msg/Image} for video streaming and \texttt{mavros\_msgs/srv/SetMode} for dynamic mode switching.
+    \item \textbf{Error Handling:} Defensive programming checks (\texttt{if not ret or frame is None:}) and non-blocking service timeouts (\texttt{wait\_for\_service}) prevent execution freezes.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{rat_graph.png}
+    \caption{ROS 2 computation graph (\texttt{rqt\_graph}) illustrating active nodes, topics, and MAVROS integration framework.}
+    \label{fig:rqt_graph}
+\end{figure}
+
+\subsubsection{5.2.4 Engineering Justifications \& Tradeoff Defense}
+\begin{itemize}
+    \item \textbf{Perception Strategy:} HSV color space was selected over RGB to decouple color information from lighting variations, ensuring robustness against outdoor shadows and ambient sunlight.
+    \item \textbf{Detection Reliability:} A strict area threshold (\texttt{threshold\_area = 600} pixels) eliminates false positives and noise from triggering unintended mode changes.
+    \item \textbf{Visual Command Design:} Distinct high-contrast colors (Red for hazard evasion, Blue for operational targets) prevent command ambiguity.
+    \item \textbf{Computational Efficiency:} Video buffering set to 1 and resolution downscaled to $640 \times 480$ ensures a stable $\sim$30 FPS execution frequency with minimal CPU load.
+\end{itemize}
+
+\subsection{Payload Release Mechanism}
+The payload mechanism is designed to securely hold and release an empty Pepsi can upon command. It features a micro-servo actuated latch system optimized for minimum weight and high mechanical reliability, ensuring quick release within a fraction of a second.
+
+\subsection{Material Selection}
+Candidate materials were evaluated based on strength-to-weight ratio, cost, and manufacturability:
+\begin{itemize}
+    \item \textbf{Fuselage and Ribs:} Laser-cut balsa wood and lightweight plywood for optimal structural rigidity.
+    \item \textbf{Skin/Covering:} Lightweight heat-shrink polymer film to minimize aerodynamic drag and overall gross weight.
+    \item \textbf{Landing Gear and Mounts:} Carbon fiber composites and 3D-printed PETG components for high-stress endurance zones.
+\end{itemize}
+
+\section{Manufacturing Plan}
+\subsection{Manufacturing Methods and Tools}
+Fabrication utilizes CNC laser cutting for wooden rib structures, 3D printing for specialized motor mounts and payload brackets, and hand-assembly jigs to ensure precise airfoil alignment.
+
+\subsection{Assembly Sequence and Integration}
+The assembly workflow follows a systematic progression:
+\begin{enumerate}
+    \item Spar and rib bonding using epoxy resin and cyanoacrylate adhesives.
+    \item Fuselage internal framing and electronics placement (routing wires to avoid electromagnetic interference with the compass/GPS).
+    \item Control surface hinge attachment and servo calibration.
+    \item Integration of the onboard companion computer, camera mount, and MAVROS gateway.
+\end{enumerate}
+
+\subsection{Manufacturing Constraints and Risks}
+Key risks include weight creep exceeding the 19.5 oz limit and center-of-gravity shifts during battery installation. Mitigation strategies involve weighing every sub-assembly prior to final bonding and utilizing adjustable battery mounting trays.
+
+\section{Final Assessment}
+\subsection{Compliance Verification Matrix}
+The final aircraft configuration successfully complies with all core project constraints, verified through physical balancing, static load testing, and rigorous Software-in-the-Loop simulation trials.
+
+\subsection{Deviations, Limitations, and Future Work}
+Minor deviations in battery capacity margins were optimized to improve flight endurance. Future work will focus on transitioning from SITL testing to hardware-in-the-loop (HIL) flight tests with real-world wind disturbances.
+
+\end{document}
