@@ -209,7 +209,9 @@ The chosen airfoil for the PADA's wing is the S1223 Airfoil, this is based on a 
 \end{figure}
 
 \subsubsection{Wing and Tail Configurations}
+The Chosen Configuration for the main wings and the tails is very simple, the tail is to be a conventional tail, with pitch and yaw stability separated between the horizontal stabilizer and the vertical stabilizer. Moreover, the wing is chosen to be a tapered dihedral wing mounted on the upper part of the fuselage to stabilize the aircraft as much as possible.
 \subsubsection{Fuselage}
+The fuselage is also chosen to be as simple as possible in order to ease manufacturing and allow for component placement, it is chosen to be a rectangular cross-section tube to house the components and attach the wings, it will also have a tail rod that extends from the back to the tail.
 
 
 \section{Preliminary Design}
@@ -221,10 +223,80 @@ The Constraint Analysis was made based on the Constraints of the mission during 
     \caption{Propulsion constraint analysis diagram}
     \label{fig:constraint_analysis}
 \end{figure}
-The optimum point is highlighted where the Wing Loading is 43.1 and the Thrust to weight ratio is 0.31.
-
+The optimum point is highlighted where the wing loading is 43.1 and the Thrust to weight ratio is 0.31.
 This analysis assumes an AR of 3.33 and a Climb rate of 3m/s which will be taken into consideration throughout the project, also R was given a value of 30m to have a smaller turn-radius.
-\subsection{Wing and Tail Sizing}
+
+\subsection{Wing Sizing}
+The following table shows the Main Wing sizing, there were some constraints when designing the wing. Firstly, there was the wing loading from the propulsion analysis giving us the wing area, there was also the maximum span of 25in (0.64m) which is a mission constraint, there is also the aspect ratio which has to conform with the propulsion analysis' 3.33.
+\begin{table}[H]
+    \centering
+    \caption{Wing Sizing Parameters}
+    \label{tab:wing_sizing}
+
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
+        \midrule
+        Airfoil & S1223 & -- \\
+        Wingspan ($b$) & 0.63 & m \\
+        Root Chord ($C_r$) & 0.224 & m \\
+        Aspect Ratio (AR) & 3.31 & -- \\
+        Fuselage Diameter ($D_f$) & 0.15 & m \\
+        Tip Chord ($C_t$) & 0.157 & m \\
+        Mean Aero Chord ($\bar{c}$) & 0.19 & m \\
+        Wing Area ($S_w$) & 0.12 & m$^2$ \\
+        Taper Ratio ($\lambda_w$) & 0.70 & -- \\
+        Dihedral Angle & 4 & $^\circ$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+The Wing is a traditional rectangular wing with the constraints mentioned above, it has been tapered to increase efficiency and made dihedral to stabilize the aircraft, no sweep or twist was made due to complex manufacturing.
+
+\subsection{Tail Sizing}
+When Sizing the tail, the volume coefficients were taken as 0.7 for the horizontal and 0.04 for the vertical as the standard for a general aviation single engine aircraft. The rest was calculated from the wing's dimensions and that volume coefficient.
+\begin{table}[H]
+    \centering
+    \caption{Horizontal Tail Dimensions and Parameters}
+    \label{tab:ht_parameters}
+
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
+        \midrule
+        Horizontal Tail Area ($S_{HT}$) & 0.043 & m$^2$ \\
+        Horizontal Tail Span ($b_{HT}$) & 0.31 & m \\
+        Root Chord ($C_{root, HT}$) & 0.14 & m \\
+        Tip Chord ($C_{tip, HT}$) & 0.14 & m \\
+        Taper Ratio ($\lambda_{HT}$) & 1 & -- \\
+        Mean Aerodynamic Chord ($\overline{C}_{HT}$) & 0.14 & m \\
+        Aspect Ratio ($AR_{HT}$) & 2.22 & -- \\
+        Tail Moment Arm ($l_{HT}$) & 0.368 & m \\
+        Tail Volume Coefficient ($\overline{V}_{HT}$) & 0.7 & -- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Vertical Tail Dimensions and Parameters}
+    \label{tab:vt_parameters}
+
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Parameter} & \textbf{Value} & \textbf{Unit} \\
+        \midrule
+        Vertical Tail Area ($S_{VT}$) & 0.0082 & m$^2$ \\
+        Vertical Tail Span ($b_{VT}$) & 0.1 & m \\
+        Root Chord ($C_{root, VT}$) & 0.1 & m \\
+        Tip Chord ($C_{tip, VT}$) & 0.06 & m \\
+        Taper Ratio ($\lambda_{VT}$) & 1 & -- \\
+        Mean Aerodynamic Chord ($\overline{C}_{VT}$) & 0.08 & m \\
+        Aspect Ratio ($AR_{VT}$) & 1.22 & -- \\
+        Tail Moment Arm ($l_{VT}$) & 0.368 & m \\
+        Tail Volume Coefficient ($\overline{V}_{VT}$) & 0.04 & -- \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{Aerodynamic Performance and Stability Analysis}
 **Include Initial mass and Cg estimates**
