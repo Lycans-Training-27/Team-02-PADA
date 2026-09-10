@@ -243,42 +243,70 @@ This analysis assumes an AR of 3.33 and a Climb rate of 3m/s which will be taken
 % • Final aerodynamic and stability results.
 \subsection{Electrical and Avionics Design}
 
-The electrical and avionics system for the PADA aircraft is engineered to meet strict power, weight, and operational constraints while ensuring reliable communication with the ROS 2 autonomy stack via MAVROS. 
+The electrical architecture of the PADA aircraft is designed to deliver regulated, reliable power to high-draw propulsion components and sensitive digital avionics while maintaining strict weight and safety margins.
 
-\subsubsection{Component Selection and Inventory}
+\subsubsection{Component Selection and Power Budget}
 
-Table~\ref{tab:electrical_inventory} details the selected hardware components, including their electrical ratings, approximate costs, mass allocations, and design justifications.
+A comprehensive power analysis was conducted to size the power source and ensure system stability across nominal cruise and peak throttle flight regimes.
 
 \begin{table}[H]
     \centering
-    \caption{PADA Electrical Components Inventory}
-    \label{tab:electrical_inventory}
+    \caption{Electrical System Component Inventory and Operational Power Budget}
+    \label{tab:power_budget}
     \small
-    \begin{tabular}{l l l l l}
+    \begin{tabular}{l l l l l l}
         \toprule
-        \textbf{Component} & \textbf{Power / Amp Rating} & \textbf{Price (\$)} & \textbf{Weight (g)} & \textbf{Selected Model / Notes} \\
+        \textbf{Component} & \textbf{Operating Volts} & \textbf{Nominal Current} & \textbf{Peak Current} & \textbf{Weight} & \textbf{Model / Spec} \\
         \midrule
-        Battery & 3S 11.1V 1300mAh 45C & \$15.00 & 115 g & Tattu 3S LiPo (High discharge rate) \\
-        ESC & 30A Continuous (40A Burst) & \$12.00 & 28 g & BLHeli\_S 30A ESC with 5V/2A BEC \\
-        Motor & 2205 2300KV (Max $\approx$ 25A) & \$14.00 & 30 g & EMAX RS2205 Brushless Outrunner \\
-        Propeller & N/A & \$3.00 & 8 g & Gemfan 6040 2-Blade Propeller \\
-        Flight Controller & 5V DC / 2W & \$45.00 & 35 g & Pixhawk 2.4.8 (ArduPilot Compatible) \\
-        Receiver & 4.8V--8.4V DC & \$15.00 & 7 g & Flysky FS-iA6B 6-Channel Receiver \\
-        GPS Module & 5V DC / 100mA & \$18.00 & 26 g & NEO-M8N GPS with Compass \\
-        Telemetry Radio & 5V DC / 500mW (915MHz) & \$22.00 & 14 g & Holybro Transceiver Set (100mW) \\
-        Servos (x4) & 4.8V--6.0V DC ($1.8\,\text{kg}\cdot\text{cm}$) & \$16.00 & 54 g ($4 \times 13.5\text{g}$) & TowerPro MG90S Metal Gear Micro \\
+        Battery & 11.1V (3S LiPo) & --- & 58.5A (45C max) & 115 g & Tattu 1300mAh 3S 45C \\
+        Brushless Motor & 11.1V DC & 8.5A (Cruise) & 22.0A (Max) & 30 g & EMAX RS2205 2300KV \\
+        ESC & 11.1V DC & 30A Continuous & 40A (10s Burst) & 28 g & BLHeli\_S 30A w/ 5V BEC \\
+        Flight Controller & 5.0V DC (via BEC) & 0.25A & 0.40A & 35 g & Pixhawk 2.4.8 \\
+        GPS + Compass & 5.0V DC & 0.08A & 0.12A & 26 g & NEO-M8N \\
+        Telemetry Radio & 5.0V DC & 0.10A & 0.50A & 14 g & Holybro 915MHz 100mW \\
+        RC Receiver & 5.0V DC & 0.05A & 0.08A & 7 g & Flysky FS-iA6B \\
+        Servos (4x MG90S) & 5.0V DC & 0.40A (Total) & 1.60A (Stall) & 54 g & Metal Gear ($1.8\,\text{kg}\cdot\text{cm}$) \\
         \midrule
-        \textbf{Total} & --- & \textbf{\$150.00} & \textbf{317 g} & --- \\
+        \textbf{Total System} & --- & \textbf{9.38 A} & \textbf{24.70 A} & \textbf{309 g} & --- \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\subsubsection{Electrical System Architecture and Safety}
+\textbf{Battery Endurance Calculation:}
+Assuming a continuous nominal cruise draw of $9.38\,\text{A}$ on a $1300\,\text{mAh}$ battery, total nominal operational flight time $t_{\text{flight}}$ is calculated as:
+\begin{equation}
+    t_{\text{flight}} = \frac{1.3\,\text{Ah} \times 0.80 \text{ (usable capacity)}}{9.38\,\text{A}} \times 60\,\text{min/hr} \approx 6.65\,\text{minutes}
+\end{equation}
+This comfortably satisfies the $3\text{--}5$ minute mission profile with a $20\%$ capacity safety buffer.
+
+\subsubsection{Electrical Block Diagram and Schematic}
+
+Figure~\ref{fig:elec_schematic} outlines the power distribution topology and signal interconnections between the companion computer, flight controller, sensors, and power systems.
+
+\begin{figure}[H]
+    \centering
+    % Placeholder for your electrical schematic image
+    \includegraphics[width=0.85\linewidth]{images/electrical_schematic.png}
+    \caption{PADA Aircraft Electrical System Block Diagram and Circuit Interconnects.}
+    \label{fig:elec_schematic}
+\end{figure}
+
+\subsubsection{Wiring, Connectors, Protection, and Electrical Safety}
 
 \begin{itemize}
-    \item \textbf{Power Distribution:} A 3S LiPo battery supplies main battery voltage directly to the 30A ESC. The integrated Battery Eliminator Circuit (BEC) regulates power down to $5\,\text{V DC}$ to safely drive the flight controller, RC receiver, and onboard servos.
-    \item \textbf{Autopilot \& ROS 2 Integration:} The Pixhawk 2.4.8 runs ArduPilot firmware and communicates with the companion computer via a TELEM serial port. MAVROS bridges TELEM commands directly to ROS 2 nodes for autonomous mission execution and mode switching.
-    \item \textbf{Electrical Safety:} A high-current XT60 main connector serves as the master power switch. All signal lines utilize shielded twisted-pair wiring to prevent electromagnetic interference (EMI) from high-current motor leads.
+    \item \textbf{High-Current Path:} Primary power from the 3S LiPo to the ESC uses 14 AWG silicone wire rated for up to $40\,\text{A}$ continuous, terminated with an **XT60 anti-spark connector** serving as the master physical arming switch.
+    \item \textbf{Low-Voltage Signal Path:} Avionics and servo communication lines utilize 26 AWG twisted-pair wiring to reduce high-frequency electromagnetic interference (EMI) generated by motor switching.
+    \item \textbf{Voltage Regulation \& Protection:} Power to the Pixhawk, sensors, and servos is stepped down to $5.0\,\text{V DC}$ using the 30A ESC's integrated linear Battery Eliminator Circuit (BEC). An inline fuse and capacitor bank on the main power distribution board suppress inductive voltage spikes during high-acceleration maneuvers.
+\end{itemize}
+
+\subsubsection{Component Placement and Integration}
+
+To maintain dynamic balance and aerodynamic stability, hardware components are arranged within the internal fuselage cavity as follows:
+
+\begin{itemize}
+    \item \textbf{Center of Gravity (CG) Alignment:} The heaviest components—the 3S LiPo battery ($115\,\text{g}$) and Pixhawk FC ($35\,\text{g}$)—are placed directly over the calculated aircraft CG ($25\text{--}30\%$ mean aerodynamic chord) on a sliding tray to allow fine trim adjustments.
+    \item \textbf{Vibration Isolation:} The Pixhawk flight controller is mounted on anti-vibration damping foam to prevent high-frequency motor vibrations from degrading IMU sensor fusion performance.
+    \item \textbf{EMI Separation:} The NEO-M8N GPS/compass module is mounted externally on a elevated $10\,\text{cm}$ carbon mast clear of motor leads, battery current paths, and high-frequency telemetry antennas to prevent magnetic interference.
 \end{itemize}
 \subsection{Autonomous System and Software}
 % Include:
